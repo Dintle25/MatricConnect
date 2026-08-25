@@ -1,0 +1,42 @@
+workflows:
+  matricconnect-dev:
+    name: MatricConnect - Dev build
+    max_build_duration: 30
+    environment:
+      flutter: stable
+    scripts:
+      - name: Get packages
+        script: flutter pub get
+      - name: Generate Freezed / json_serializable code
+        script: dart run build_runner build --delete-conflicting-outputs
+      - name: Analyze
+        script: flutter analyze
+      - name: Run tests
+        script: flutter test
+      - name: Build dev APK
+        script: flutter build apk --release -t lib/main_dev.dart
+    artifacts:
+      - build/**/outputs/**/*.apk
+
+  matricconnect-prod:
+    name: MatricConnect - Prod build
+    max_build_duration: 30
+    environment:
+      flutter: stable
+    scripts:
+      - name: Get packages
+        script: flutter pub get
+      - name: Generate Freezed / json_serializable code
+        script: dart run build_runner build --delete-conflicting-outputs
+      - name: Analyze
+        script: flutter analyze
+      - name: Run tests
+        script: flutter test
+      - name: Build prod APK
+        script: flutter build apk --release -t lib/main_prod.dart
+    artifacts:
+      - build/**/outputs/**/*.apk
+    publishing:
+      email:
+        recipients:
+          - you@example.com
